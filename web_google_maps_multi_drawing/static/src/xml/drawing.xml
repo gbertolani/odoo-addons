@@ -19,6 +19,16 @@
         </div>
     </t>
 
+    <t t-name="MapView.buttons">
+        <div class="o_list_buttons">
+            <div class="o_form_marker_buttons_actions">
+                <button type="button" class="btn btn-primary o-map-button-center-map">
+                    <t t-esc="_t('Center Map')"/>
+                </button>
+            </div>
+        </div>
+    </t>
+
     <t t-name="FormView.marker_edit_button">
     </t>
 </templates>
