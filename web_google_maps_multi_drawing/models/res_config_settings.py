@@ -5,7 +5,7 @@ from odoo import api, models, fields
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    google_maps_drawing = fields.Boolean(string='Drawing')
+    google_maps_drawing = fields.Boolean(string='Drawings')
 
     @api.multi
     def set_values(self):
@@ -37,6 +37,6 @@ class ResConfigSettings(models.TransientModel):
         libraries = google_maps_libraries.split(',')
         if self.google_maps_drawing:
             libraries.append('drawing')
-        
+
         result = ','.join(libraries)
         return result

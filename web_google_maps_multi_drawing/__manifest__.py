@@ -5,7 +5,7 @@
     'author': 'Yopi Angi',
     'license': 'AGPL-3',
     'maintainer': 'Gastón Albeto Bertolani',
-    'support': 'yopiangi@gmail.com',
+    'support': 'gaston.bertolani@gmail.com',
     'category': 'Extra Tools',
     'description': """
 Web Google Maps Multi Drawing
@@ -19,9 +19,9 @@ Allows users to draw polygons, rectangles, and circles on the map.
     'demo': [],
     # 'images': ['static/description/thumbnails.png'],
     'data': [
-        # 'data/google_maps_library.xml',
+        'data/google_maps_library.xml',
         'views/template.xml',
-        # 'views/res_config_settings.xml',
+        'views/res_config_settings.xml',
     ],
     'qweb': ['static/src/xml/drawing.xml'],
     'installable': True

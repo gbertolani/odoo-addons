@@ -6,7 +6,7 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
     var qweb = core.qweb;
     var _t = core._t;
 
-    var MultiMapRenderer = MapRenderer.extend({
+        var MultiMapRenderer = MapRenderer.extend({
 
         init: function () {
             this._super.apply(this, arguments);
@@ -19,47 +19,91 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
         //     this._initDrawing();
         //     return res;
         // },
+        //
 
-        // _initLibraryProperties: function (params) {
-        //     //this.mapLibrary == 'drawing'
-        //
-        //     this.drawingMode = params.drawingMode || 'shape_type';
-        //     this.drawingPath = params.drawingPath || 'shape_paths';
-        //     this.shapesLatLng = [];
-        //
-        //     //this.mapLibrary == 'geometry'
-        //     this.defaultMarkerColor = 'red';
-        //     this.markerGroupedInfo = [];
-        //     this.markers = [];
-        //     this.iconUrl = '/web_google_maps/static/src/img/markers/';
-        //     this.fieldLat = params.fieldLat;
-        //     this.fieldLng = params.fieldLng;
-        //     this.markerColor = params.markerColor;
-        //     this.markerColors = params.markerColors;
-        //     this.groupedMarkerColors = _.extend([], params.iconColors);
-        // },
-        //
-        // /**
-        //  * @override
-        //  */
-        // _renderView: function () {
-        //     var self = this;
-        //     //this.mapLibrary == 'geometry'
-        //     this.markerGroupedInfo.length = 0;
-        //     this._clearMarkerClusters();
-        //     this._renderMarkers();
-        //     this._clusterMarkers();
-        //     return this._super
-        //         .apply(this, arguments)
-        //         .then(self._renderSidebarGroup.bind(self))
-        //         .then(self.mapGeometryCentered.bind(self));
-        //     } else if (this.mapLibrary === 'drawing') {
-        //         this.shapesLatLng.length = 0;
-        //         this._renderShapes();
-        //         return this._super.apply(this, arguments).then(this.mapShapesCentered.bind(this));
-        //     }
-        //     return this._super.apply(this, arguments);
-        // },
+        //save Markers
+        /*
+         * We user all params and save markes in shapes
+         * to center map
+         */
+        _initLibraryProperties: function (params) {
+            //this.mapLibrary == 'drawing'
+
+            this.drawingMode = params.drawingMode || 'shape_type';
+            this.drawingPath = params.drawingPath || 'shape_paths';
+            this.shapesLatLng = [];
+
+            //this.mapLibrary == 'geometry'
+            this.defaultMarkerColor = 'red';
+            this.markerGroupedInfo = [];
+            this.markers = [];
+            // this.iconUrl = '/web_google_maps/static/src/img/markers/';
+            this.iconUrl = '/web_view_google_map/static/src/img/markers/';
+            this.fieldLat = params.fieldLat;
+            this.fieldLng = params.fieldLng;
+            this.markerColor = params.markerColor;
+            this.markerColors = params.markerColors;
+            this.groupedMarkerColors = _.extend([], params.iconColors);
+        },
+
+        /**
+         * Create marker
+         * @param {any} latLng: instance of google LatLng
+         * @param {any} record
+         * @param {string} color
+         */
+        _createMarker: function (latLng, record, color) {
+            var options = {
+                position: latLng,
+                map: this.gmap,
+                animation: google.maps.Animation.DROP,
+                _odooRecord: record,
+            };
+            if (color) {
+                options.icon = this._getIconColorPath(color);
+            }
+            var marker = new google.maps.Marker(options);
+            this.markers.push(marker);
+            marker.type = "marker";
+            this._saveVirtualShape(marker, record);
+            marker.addListener(
+                'click',
+                this._handleShapeClick.bind(this, record, marker)
+            );
+            // this._clusterAddMarker(marker);
+        },
+
+        /**
+         * @override
+         */
+        _renderView: function () {
+            var self = this;
+            if (this.mapLibrary === 'drawing') {
+                this._renderMarkers();
+            }
+            return this._super.apply(this, arguments);
+        },
+
+        _renderUngrouped: function () {
+            var self = this;
+            var defaultLatLng = this._getDefaultCoordinate();
+            var color, latLng, lat, lng;
+
+            _.each(this.state.data, function (record) {
+                if(record.data['shape_type'] == 'marker'){
+                    color = self._getIconColor(record);
+                    lat = record.data[self.fieldLat] || 0.0;
+                    lng = record.data[self.fieldLng] || 0.0;
+                    if (lat === 0.0 && lng === 0.0) {
+                        self._createMarker(defaultLatLng, record, color);
+                    } else {
+                        latLng = new google.maps.LatLng(lat, lng);
+                        record.markerColor = color;
+                        self._createMarker(latLng, record, color);
+                    }
+                }
+            });
+        },
 
 
         start: function () {
@@ -382,6 +426,7 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             var records = this.state.data;
             if(records.length <= record_index){
                 var ctx = this.el.dataset.context;
+                debugger;
                 this.trigger_up(
                     'add_record', {
                         context: ctx && [ctx],
@@ -406,8 +451,15 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
 
         _parseMarkerFieldVals: function(marker){
             var self = this;
-            /sh
-
+            var lat = marker.getPosition().lat();
+            var lng = marker.getPosition().lng();
+            var values = {
+                shape_type: marker.type,
+            }
+            values[self.fieldLat] = lat;
+            values[self.fieldLng] = lng;
+            var field_vals = this._prepareFieldVals(values);
+            return field_vals
         },
 
         _onMarkerCommit: function() {
