@@ -25,7 +25,6 @@ odoo.define('web_google_maps_multi_drawing.relational_fields', function (require
             var self = this;
             var data = ev.data || {};
             ev.stopPropagation();
-            debugger;
             self._setValue({
                 operation: 'DELETE',
                 ids: [data.id]
@@ -53,7 +52,6 @@ odoo.define('web_google_maps_multi_drawing.relational_fields', function (require
             }
         },
         // _onAddRecord: function(ev){
-        //     debugger;
         //     if(ev.target.arch.tag == 'map'){
         //         this.trigger_up('new_map_shape', {
         //             id: this.value.id,
@@ -74,7 +72,6 @@ odoo.define('web_google_maps_multi_drawing.relational_fields', function (require
 
         // _onAddRecord: function(ev){
         //     if(ev.target.arch.tag == 'map'){
-        //         debugger;
         //         var data = ev.data || {};
         //         ev.stopPropagation();
         //         var self = this;
@@ -102,7 +99,6 @@ odoo.define('web_google_maps_multi_drawing.relational_fields', function (require
         //             }).always(function() {
         //                 self.creatingRecord = false;
         //             }).done(function() {
-        //                 debugger;
         //                 if (data.onSuccess) {
         //                     data.onSuccess();
         //                 }
@@ -114,7 +110,6 @@ odoo.define('web_google_maps_multi_drawing.relational_fields', function (require
         // },
 
         _onFieldChanged: function (ev) {
-            debugger;
             return this._super.apply(this, arguments);
         },
         // commitChanges: function() {

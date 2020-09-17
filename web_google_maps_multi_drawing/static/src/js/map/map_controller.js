@@ -9,19 +9,15 @@ odoo.define('web_google_maps_multi_drawing.MapController', function (require) {
     MapController.include({
         init: function (parent, model, renderer, params) {
             this._super.apply(this, arguments);
-            debugger;
         },
-        saveRecord: function(){
-            debugger;
-        },
-        canBeSaved: function (recordID) {
-            debugger;
-
-        },
-        _saveRecord: function (recordID, options) {
-            debugger;
-            return this._super.apply(this, arguments);
-        },
+        // saveRecord: function(){
+        // },
+        // canBeSaved: function (recordID) {
+        //
+        // },
+        // _saveRecord: function (recordID, options) {
+        //     return this._super.apply(this, arguments);
+        // },
 
     });
 });

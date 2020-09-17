@@ -37,8 +37,7 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             this.defaultMarkerColor = 'red';
             this.markerGroupedInfo = [];
             this.markers = [];
-            // this.iconUrl = '/web_google_maps/static/src/img/markers/';
-            this.iconUrl = '/web_view_google_map/static/src/img/markers/';
+            this.iconUrl = '/web_google_maps/static/src/img/markers/';
             this.fieldLat = params.fieldLat;
             this.fieldLng = params.fieldLng;
             this.markerColor = params.markerColor;
@@ -295,7 +294,6 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
                 editable: true,
                 zIndex: 1,
             };
-            debugger;
             var drawingModes = this._getDrawingModes();
             var edit_mode = this.isEditMode();
             this.gmapDrawingManager = new google.maps.drawing.DrawingManager({
@@ -355,7 +353,6 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             //
             var newShape = event.overlay;
             newShape.type = event.type;
-            debugger;
             this._saveVirtualShape(newShape);
             google.maps.event.addListener(
                 newShape,
@@ -371,7 +368,9 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
          */
         _clearSelectedShape: function () {
             if (this.selectedShape) {
-                this.selectedShape.setEditable(false);
+                if(this.selectedShape.type != 'marker'){
+                    this.selectedShape.setEditable(false);
+                }
                 this.selectedShape = null;
             }
         },
@@ -426,7 +425,6 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             var records = this.state.data;
             if(records.length <= record_index){
                 var ctx = this.el.dataset.context;
-                debugger;
                 this.trigger_up(
                     'add_record', {
                         context: ctx && [ctx],
@@ -749,7 +747,6 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
          *   <<<------ Record handler ----->>>>
          */
         getEditableRecordID: function(){
-            debugger;
             return this.state.data[this.state.data.length -1].id;
             if (this.currentRow !== null) {
                 return this.state.data[this.currentRow].id;

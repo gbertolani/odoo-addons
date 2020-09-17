@@ -19,7 +19,6 @@ odoo.define('web_google_maps_multi_drawing.FormController', function (require) {
             //It's not a good code, but it works
             var data = event.data || {}
             event.stopPropagation();
-            debugger;
         },
 
         _onNewMapShape: function (ev) {
@@ -27,7 +26,6 @@ odoo.define('web_google_maps_multi_drawing.FormController', function (require) {
             if (ev.data.id) {
                 this.model.save(ev.data.id, {savePoint: true});
             }
-            debugger;
             var reg = this.model.localData[ev.data.id]
             var changes = _.extend(reg._changes || {}, ev.data.changes);
             reg._changes = changes;
@@ -40,7 +38,6 @@ odoo.define('web_google_maps_multi_drawing.FormController', function (require) {
         _onOpenOne2ManyRecord: function (event) {
             event.stopPropagation();
             var data = event.data;
-            debugger;
             if(!Object.keys(data.mapShapeVals||{}).length){
                 return this._super.apply(this, arguments);
             }
@@ -63,6 +60,7 @@ odoo.define('web_google_maps_multi_drawing.FormController', function (require) {
                 res_id: record && record.res_id,
                 res_model: data.field.relation,
                 shouldSaveLocally: true,
+                disable_multiple_selection: true,
                 mapShapeVals: data.mapShapeVals, // <-- Pass mapShape
                 title: (
                     record ?

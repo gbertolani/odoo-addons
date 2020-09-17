@@ -18,4 +18,7 @@
             <div class="o_map_view"></div>
         </div>
     </t>
+
+    <t t-name="FormView.marker_edit_button">
+    </t>
 </templates>
