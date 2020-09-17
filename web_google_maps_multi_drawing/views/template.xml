@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="web_google_maps assets backend drawing" inherit_id="web_google_maps.assets_backend">
+        <xpath expr="." position="inside">
+            <link href="/web_google_maps_multi_drawing/static/src/lib/color-picker/themes/classic.min.css" rel="stylesheet"/>
+            <link href="/web_google_maps_multi_drawing/static/src/lib/color-picker/themes/monolith.min.css" rel="stylesheet"/>
+            <link href="/web_google_maps_multi_drawing/static/src/lib/color-picker/themes/nano.min.css" rel="stylesheet"/>
+            <script type="text/javascript" src="/web_google_maps_multi_drawing/static/src/lib/color-picker/pickr.min.js"></script>
+            <script type="text/javascript" src="/web_google_maps_multi_drawing/static/src/lib/psbc/pSBC.js"></script>
+            <script type="text/javascript" src="/web_google_maps_multi_drawing/static/src/js/map/view_dialogs.js"></script>
+            <script type="text/javascript" src="/web_google_maps_multi_drawing/static/src/js/map/map_controller.js"></script>
+            <script type="text/javascript" src="/web_google_maps_multi_drawing/static/src/js/map/form_controller.js"></script>
+            <script type="text/javascript" src="/web_google_maps_multi_drawing/static/src/js/map/map_renderer.js"></script>
+            <script type="text/javascript" src="/web_google_maps_multi_drawing/static/src/js/fields/relational_fields.js"></script>
+        </xpath>
+    </template>
+</odoo>

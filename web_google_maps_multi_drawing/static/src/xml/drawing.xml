@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="MapMultiDrawing.BtnDelete">
+        <button class="btn btn-default" style="margin-bottom: 7px;padding: 0px 5px 5px 3px;; width: 22px; height: 22px; background-color: white; color: #686767;"
+            type="button" data-toggle="tooltip" data-placement="bottom" title="Press this button to delete the selected shape">
+            <i class="fa fa-trash-o fa-lg"></i>
+        </button>
+    </t>
+
+    <t t-name="MapMultiDrawing.BtnDrawingColorPicker">
+        <div class="color-picker-container" style="margin-bottom: 7px;padding: 2px 4px 5px 4px;; width: 22px; height: 22px; background-color: white; color: #686767;">
+            <div class="btn-color-picker" />
+        </div>
+    </t>
+
+    <t t-name="WidgetDrawing.Map">
+        <div class="o_map_container">
+            <div class="o_map_view"></div>
+        </div>
+    </t>
+</templates>
