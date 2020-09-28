@@ -33,7 +33,8 @@ odoo.define('web_google_maps_multi_drawing.relational_fields', function (require
 
         //Use a Form to create shape
         _onAddRecord: function(ev){
-            if(ev.target.arch.tag == 'map'){
+            var arch = ev.target.arch;
+            if(!_.isUndefined(arch) && ev.target.arch.tag == 'map'){
                 var self = this;
                 var data = ev.data || {};
                 ev.stopPropagation();
