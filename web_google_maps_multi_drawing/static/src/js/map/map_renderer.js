@@ -104,10 +104,29 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             });
         },
 
+        _initGeoLocation: function(){
+            var self = this;
+            var regs = this.state.data;
+            if(!(!_.isUndefined(regs) && regs.length)){
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            const pos = {
+                                lat: position.coords.latitude,
+                                lng: position.coords.longitude,
+                            };
+                            self.gmap.setCenter(pos);
+                        },
+                    );
+                }
+            }
+        },
+
 
         start: function () {
             var res = this._super();
             this._initDrawing();
+            this._initGeoLocation();
             return res;
         },
 
