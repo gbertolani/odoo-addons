@@ -104,6 +104,85 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             });
         },
 
+        getRefId: function(){
+            var parent_id = this.getParent().recordData.id;
+            if(_.isUndefined(parent_id)){
+                var parent_id = this.getParent().dataPointID;
+            }
+            return parent_id
+        },
+
+        getGmapSession: function(key){
+            var parent_id = this.getRefId();
+            var storage = sessionStorage.getItem('odooGmap');
+            if(!storage){
+                return false;
+            }
+            var gmaps_vals = JSON.parse(storage);
+            var gmap_vals = gmaps_vals[parent_id];
+            if(_.isUndefined(gmap_vals)){
+                return false;
+            }
+            var value = gmap_vals[key];
+            if(_.isUndefined(value)){
+                return false;
+            }
+            return value
+        },
+
+        updateStoragedRefId: function(){
+            var parent_id = this.getRefId();
+            var storage = sessionStorage.getItem('odooGmap');
+            if(!storage){
+                return false;
+            }
+            var gmaps_vals = JSON.parse(storage);
+
+            var newIds =  _.filter(Object.keys(gmaps_vals), function(key){
+                if(typeof key == "string" && key.match(/^[0-9]+$/) == null){
+                    return true;
+                }
+                return false;
+            });
+            if(newIds.length){
+                var newIdsSorted = _.sortBy(newIds, function(ref){
+                    return parseInt(ref.match(/\d+/)[0])
+                }).reverse()
+                var ref = newIdsSorted[0];
+                if(typeof parent_id == 'number' &&
+                    _.isUndefined(gmaps_vals[parent_id])){
+                    gmaps_vals[parent_id] = gmaps_vals[ref];
+                }
+                _.each(newIdsSorted, function(newId){
+                    if(newId != parent_id){
+                        delete gmaps_vals[newId]
+                    }
+                })
+                var new_storage = JSON.stringify(gmaps_vals)
+                sessionStorage.setItem('odooGmap', new_storage);
+            }
+            return true;
+        },
+
+        dumpGmapSession: function(key, value){
+            var parent_id = this.getRefId();
+            var storage = sessionStorage.getItem('odooGmap');
+            if(!storage){
+                storage = "{}";
+            }
+            var gmaps_vals = JSON.parse(storage);
+            var gmap_vals = gmaps_vals[parent_id];
+            if(_.isUndefined(gmap_vals)){
+                gmaps_vals[parent_id] = {}
+            }
+            gmaps_vals[parent_id][key] = value;
+            var new_storage = JSON.stringify(gmaps_vals)
+            sessionStorage.setItem('odooGmap', new_storage);
+            return true;
+        },
+
+
+
         _initGeoLocation: function(){
             var self = this;
             var regs = this.state.data;
@@ -111,10 +190,24 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
-                            const pos = {
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude,
-                            };
+                            var zoom = self.getGmapSession('odooGmapZoom')
+                            // var zoom = sessionStorage.getItem('odooGmapZoom');
+                            if(zoom){
+                                self.gmap.setZoom(parseInt(zoom));
+                            }
+                            var centerLat = self.getGmapSession('odooGmapCenterLat');
+                            var centerLng = self.getGmapSession('odooGmapCenterLng');
+                            if(centerLat != false &&  centerLng != false ){
+                                var pos = {
+                                    lat: parseFloat(centerLat),
+                                    lng: parseFloat(centerLng),
+                                };
+                            }else{
+                                var pos = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude,
+                                };
+                            }
                             self.gmap.setCenter(pos);
                         },
                     );
@@ -122,11 +215,31 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             }
         },
 
+        _initHandlers: function(){
+            //Handle zoom and position
+            var self = this;
+            this.gmap.addListener("idle", () => {
+                var zoom = self.gmap.getZoom();
+                self.dumpGmapSession('odooGmapZoom', zoom)
+            });
+
+            this.gmap.addListener("dragend", () => {
+                var bounds = self.gmap.getBounds();
+                var centerLat = bounds.getCenter().lat();
+                var centerLng = bounds.getCenter().lng();
+                self.dumpGmapSession('odooGmapCenterLat', centerLat);
+                self.dumpGmapSession('odooGmapCenterLng', centerLng);
+            });
+
+        },
+
 
         start: function () {
+            this.updateStoragedRefId()
             var res = this._super();
             this._initDrawing();
             this._initGeoLocation();
+            this._initHandlers();
             return res;
         },
 
@@ -765,34 +878,35 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
         /*
          *   <<<------ Record handler ----->>>>
          */
-        getEditableRecordID: function(){
-            return this.state.data[this.state.data.length -1].id;
-            if (this.currentRow !== null) {
-                return this.state.data[this.currentRow].id;
-            }
-            return null;
-        },
-
-        /**
-         * This method is called when we create a new shape or marker.
-         *
-         * @param {MouseEvent} ev
-         */
-        _onAddRecord: function (ev) {
-            // we don't want the browser to navigate to a the # url
-            ev.preventDefault();
-
-            // we don't want the click to cause other effects, such as unselecting
-            // the row that we are creating, because it counts as a click on a tr
-            ev.stopPropagation();
-
-            // but we do want to unselect current row
-            var self = this;
-            this.unselectRow().then(function () {
-                self.trigger_up(
-                    'add_record', {context: ev.currentTarget.dataset.context && [ev.currentTarget.dataset.context]}); // TODO write a test, the deferred was not considered
-            });
-        },
+        // getEditableRecordID: function(){
+        //     debugger;
+        //     return this.state.data[this.state.data.length -1].id;
+        //     if (this.currentRow !== null) {
+        //         return this.state.data[this.currentRow].id;
+        //     }
+        //     return null;
+        // },
+        //
+        // /**
+        //  * This method is called when we create a new shape or marker.
+        //  *
+        //  * @param {MouseEvent} ev
+        //  */
+        // _onAddRecord: function (ev) {
+        //     // we don't want the browser to navigate to a the # url
+        //     ev.preventDefault();
+        //
+        //     // we don't want the click to cause other effects, such as unselecting
+        //     // the row that we are creating, because it counts as a click on a tr
+        //     ev.stopPropagation();
+        //
+        //     // but we do want to unselect current row
+        //     var self = this;
+        //     this.unselectRow().then(function () {
+        //         self.trigger_up(
+        //             'add_record', {context: ev.currentTarget.dataset.context && [ev.currentTarget.dataset.context]}); // TODO write a test, the deferred was not considered
+        //     });
+        // },
 
 
 
