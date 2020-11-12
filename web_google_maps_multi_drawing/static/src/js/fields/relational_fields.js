@@ -41,7 +41,9 @@ odoo.define('web_google_maps_multi_drawing.relational_fields', function (require
                 this._openFormDialog({
                         context: data.context && data.context[0],
                         mapShapeVals: data.mapShapeVals,
-                        on_saved: function (record) {
+                        mapEditFields: data.mapEditFields || [],
+                        on_saved: function (record, changed) {
+                            self.renderer.refreshShape(data.mapShape, record);
                             self._setValue({
                                 operation: 'ADD',
                                 id: record.id,

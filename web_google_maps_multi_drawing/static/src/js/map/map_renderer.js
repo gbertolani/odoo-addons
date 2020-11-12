@@ -441,6 +441,27 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             );
         },
 
+        _getEditFields: function(shape){
+            //Allow edit marker fields
+            var mapEditFields = [];
+            if(shape.type == "marker"){
+                mapEditFields = [
+                    this.fieldLat, this.fieldLng
+                ];
+            }
+            return mapEditFields;
+        },
+
+        refreshShape: function(shape, record){
+            if(shape.type == "marker"){
+                var lat = record.data[this.fieldLat];
+                var lng = record.data[this.fieldLng];
+                var latLng = new google.maps.LatLng(lat, lng);
+                shape.setPosition(latLng);
+
+            }
+        },
+
         triggerUpSaveShape: function(shape, changes){
             var virtualShape = _.findWhere(
                 this.localData, {
@@ -455,10 +476,13 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             var records = this.state.data;
             if(records.length <= record_index){
                 var ctx = this.el.dataset.context;
+                var mapEditFields = this._getEditFields(shape);
                 this.trigger_up(
                     'add_record', {
                         context: ctx && [ctx],
                         mapShapeVals: changes,
+                        mapShape: shape,
+                        mapEditFields: mapEditFields,
                     }
                 );
             }else{

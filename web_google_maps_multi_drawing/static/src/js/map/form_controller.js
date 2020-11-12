@@ -32,6 +32,25 @@ odoo.define('web_google_maps_multi_drawing.FormController', function (require) {
             this.model.freezeOrder(ev.data.id);
         },
 
+        _showDynamicFields: function(fields_view, fields){
+            if(_.isUndefined(fields) || !fields.length){
+                return;
+            }
+            var fieldsInfo = fields_view.fieldsInfo;
+            if(_.isUndefined(fieldsInfo.form)){
+                return;
+            }
+            for(var i, i=0; i<fields.length; i++){
+                var field_name = fields[i];
+                var field = fieldsInfo.form[field_name];
+                if(_.isUndefined(field)){
+                    continue;
+                }
+                field.invisible = "0";
+                field.modifiers.invisible = false;
+            }
+        },
+
         /*
          * Override (Pass MapShape)
          */
@@ -45,7 +64,10 @@ odoo.define('web_google_maps_multi_drawing.FormController', function (require) {
             if (data.id) {
                 record = this.model.get(data.id, {raw: true});
             }
-
+            this._showDynamicFields(
+                data.fields_view,
+                data.mapEditFields,
+            );
             new dialogs.MapViewFormDialog(this, {
                 context: data.context,
                 domain: data.domain,
@@ -62,6 +84,7 @@ odoo.define('web_google_maps_multi_drawing.FormController', function (require) {
                 shouldSaveLocally: true,
                 disable_multiple_selection: true,
                 mapShapeVals: data.mapShapeVals, // <-- Pass mapShape
+                mapEditFields: data.mapEditFields,
                 title: (
                     record ?
                         _t("Open: ") :
