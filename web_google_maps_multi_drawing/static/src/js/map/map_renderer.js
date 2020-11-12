@@ -104,6 +104,15 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             });
         },
 
+
+        _centerMap: function(){
+            if (this.mapLibrary === 'geometry') {
+                this.mapGeometryCentered();
+            } else if (this.mapLibrary === 'drawing') {
+                this.mapShapesCentered();
+            }
+        },
+
         _initGeoLocation: function(){
             var self = this;
             var regs = this.state.data;
@@ -119,6 +128,8 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
                         },
                     );
                 }
+            }else{
+                self._centerMap();
             }
         },
 
