@@ -186,10 +186,12 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
         _initGeoLocation: function(){
             var self = this;
             var regs = this.state.data;
+            debugger;
             if(!(!_.isUndefined(regs) && regs.length)){
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
+                            debugger;
                             var zoom = self.getGmapSession('odooGmapZoom')
                             // var zoom = sessionStorage.getItem('odooGmapZoom');
                             if(zoom){
@@ -211,6 +213,21 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
                             self.gmap.setCenter(pos);
                         },
                     );
+                }
+            }else{
+                var zoom = self.getGmapSession('odooGmapZoom')
+                // var zoom = sessionStorage.getItem('odooGmapZoom');
+                if(zoom){
+                    self.gmap.setZoom(parseInt(zoom));
+                }
+                var centerLat = self.getGmapSession('odooGmapCenterLat');
+                var centerLng = self.getGmapSession('odooGmapCenterLng');
+                if(centerLat != false &&  centerLng != false ){
+                    var pos = {
+                        lat: parseFloat(centerLat),
+                        lng: parseFloat(centerLng),
+                    };
+                    self.gmap.setCenter(pos);
                 }
             }
         },
