@@ -12,6 +12,7 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             this._super.apply(this, arguments);
             this.editModeColor = '#006ee5';
             this.localData = [];
+            this.defaultMapPos = null;
         },
 
         // _initMap: function () {
@@ -105,10 +106,13 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
         },
 
         _getDefaultMapPos: function(){
-            const pos = {
-                lat: -34.6083,
-                lng: -58.3712,
-            };
+            var pos = this.defaultMapPos;
+            if(pos == null){
+                pos = {
+                    lat: -34.6083,
+                    lng: -58.3712,
+                };
+            }
             return pos;
         },
 
@@ -137,6 +141,7 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
                                 lat: position.coords.latitude,
                                 lng: position.coords.longitude,
                             };
+                            self.defaultMapPos = pos;
                             self.gmap.setCenter(pos);
                         },
                     );
