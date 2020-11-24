@@ -29,7 +29,7 @@ msgstr "Circulo"
 
 #. module: web_google_maps_multi_drawing
 #. openerp-web
-#: code:addons/web_google_maps_multi_drawing/static/src/js/map/map_renderer.js:138
+#: code:addons/web_google_maps_multi_drawing/static/src/js/map/map_renderer.js:186
 #, python-format
 msgid "Clear"
 msgstr "Borrar"
@@ -37,14 +37,14 @@ msgstr "Borrar"
 #. module: web_google_maps_multi_drawing
 #: model:ir.model,name:web_google_maps_multi_drawing.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configuraciones"
+msgstr "Opciones de Configuración"
 
 #. module: web_google_maps_multi_drawing
 #. openerp-web
-#: code:addons/web_google_maps_multi_drawing/static/src/js/map/form_controller.js:68
+#: code:addons/web_google_maps_multi_drawing/static/src/js/map/form_controller.js:91
 #, python-format
 msgid "Create "
-msgstr "Crear"
+msgstr "Crear "
 
 #. module: web_google_maps_multi_drawing
 #: model:ir.model.fields,field_description:web_google_maps_multi_drawing.field_google_maps_drawing_shape_mixin__shape_description
@@ -54,7 +54,7 @@ msgstr "Descripción"
 #. module: web_google_maps_multi_drawing
 #: model:ir.model.fields,field_description:web_google_maps_multi_drawing.field_google_maps_drawing_shape_mixin__display_name
 msgid "Display Name"
-msgstr "Nombre"
+msgstr "Nombre mostrado"
 
 #. module: web_google_maps_multi_drawing
 #: model_terms:ir.ui.view,arch_db:web_google_maps_multi_drawing.res_config_settings_view_form
@@ -63,14 +63,9 @@ msgstr "Documentación de la librería de dibujo"
 
 #. module: web_google_maps_multi_drawing
 #: model_terms:ir.ui.view,arch_db:web_google_maps_multi_drawing.res_config_settings_view_form
-msgid ""
-"Drawing provides a graphical interface for users to draw polygons, "
-"rectangles, polylines, circles, and markers on the map.\n"
+msgid "Drawing provides a graphical interface for users to draw polygons, rectangles, polylines, circles, and markers on the map.\n"
 "                            Consult the"
-msgstr ""
-"El dibujo proporciona una interfaz gráfica para que los usuarios "
-"dibujen polígonos, rectángulos, polilíneas, círculos y marcadores "
-"en el mapa."
+msgstr "El dibujo proporciona una interfaz gráfica para que los usuarios dibujen polígonos, rectángulos, polilíneas, círculos y marcadores en el mapa."
 
 #. module: web_google_maps_multi_drawing
 #: model:ir.model.fields,field_description:web_google_maps_multi_drawing.field_res_config_settings__google_maps_drawing
@@ -79,7 +74,7 @@ msgstr "Dibujos"
 
 #. module: web_google_maps_multi_drawing
 #. openerp-web
-#: code:addons/web_google_maps_multi_drawing/static/src/js/map/map_renderer.js:421
+#: code:addons/web_google_maps_multi_drawing/static/src/js/map/map_renderer.js:490
 #, python-format
 msgid "Error! Shape not registered. Please delete it"
 msgstr "¡Error! Forma no registrada. Por favor borralo"
@@ -92,12 +87,12 @@ msgstr "Mixin de formas de Google Maps"
 #. module: web_google_maps_multi_drawing
 #: model:ir.model.fields,field_description:web_google_maps_multi_drawing.field_google_maps_drawing_shape_mixin__id
 msgid "ID"
-msgstr "ID"
+msgstr ""
 
 #. module: web_google_maps_multi_drawing
 #: model:ir.model.fields,field_description:web_google_maps_multi_drawing.field_google_maps_drawing_shape_mixin____last_update
 msgid "Last Modified on"
-msgstr "Última modificación el"
+msgstr "Última modificación en"
 
 #. module: web_google_maps_multi_drawing
 #: selection:google_maps.drawing.shape.mixin,shape_type:0
@@ -121,15 +116,15 @@ msgstr "Nombre"
 
 #. module: web_google_maps_multi_drawing
 #. openerp-web
-#: code:addons/web_google_maps_multi_drawing/static/src/js/map/form_controller.js:67
+#: code:addons/web_google_maps_multi_drawing/static/src/js/map/form_controller.js:90
 #, python-format
 msgid "Open: "
-msgstr "Abrir:"
+msgstr "Abrir: "
 
 #. module: web_google_maps_multi_drawing
 #: model:ir.model.fields,field_description:web_google_maps_multi_drawing.field_google_maps_drawing_shape_mixin__shape_paths
 msgid "Paths"
-msgstr "Paths"
+msgstr "Rutas"
 
 #. module: web_google_maps_multi_drawing
 #: selection:google_maps.drawing.shape.mixin,shape_type:0
@@ -162,7 +157,7 @@ msgstr "Rectangulo"
 
 #. module: web_google_maps_multi_drawing
 #. openerp-web
-#: code:addons/web_google_maps_multi_drawing/static/src/js/map/map_renderer.js:137
+#: code:addons/web_google_maps_multi_drawing/static/src/js/map/map_renderer.js:185
 #, python-format
 msgid "Save"
 msgstr "Guardar"
@@ -175,4 +170,5 @@ msgstr "Tipo"
 #. module: web_google_maps_multi_drawing
 #: model_terms:ir.ui.view,arch_db:web_google_maps_multi_drawing.res_config_settings_view_form
 msgid "for more information."
-msgstr ""
+msgstr "para mas información"
+
