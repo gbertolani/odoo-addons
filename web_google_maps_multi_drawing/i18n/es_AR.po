@@ -146,6 +146,20 @@ msgid "Center Map"
 msgstr "Centrar Mapa"
 
 #. module: web_google_maps_multi_drawing
+#. openerp-web
+#: code:addons/web_google_maps_multi_drawing/static/src/xml/drawing.xml:24
+#, python-format
+msgid "Latitude"
+msgstr "Latitud"
+
+#. module: web_google_maps_multi_drawing
+#. openerp-web
+#: code:addons/web_google_maps_multi_drawing/static/src/xml/drawing.xml:32
+#, python-format
+msgid "Longitude"
+msgstr "Longitud"
+
+#. module: web_google_maps_multi_drawing
 #: model:ir.model.fields,field_description:web_google_maps_multi_drawing.field_google_maps_drawing_shape_mixin__shape_radius
 msgid "Radius"
 msgstr "Radio"
