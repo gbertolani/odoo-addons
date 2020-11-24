@@ -41,6 +41,8 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             this.iconUrl = '/web_google_maps/static/src/img/markers/';
             this.fieldLat = params.fieldLat;
             this.fieldLng = params.fieldLng;
+            this.zoneLat = params.arch.attrs.zoneLat;
+            this.zoneLng = params.arch.attrs.zoneLng;
             this.markerColor = params.markerColor;
             this.markerColors = params.markerColors;
             this.groupedMarkerColors = _.extend([], params.iconColors);
@@ -103,6 +105,22 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
                     }
                 }
             });
+        },
+
+        getZonePos: function(){
+            var parent = this.getParent();
+            var data = parent.recordData;
+            if(_.isUndefined(data)){
+                return;
+            }
+            if(_.isUndefined(this.zoneLat) || _.isUndefined(this.zoneLng)){
+                return;
+            }
+            var pos = {
+                lat: data[this.zoneLat],
+                lng: data[this.zoneLng],
+            }
+            return pos;
         },
 
         _getDefaultMapPos: function(){
