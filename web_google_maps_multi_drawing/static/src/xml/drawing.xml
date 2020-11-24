@@ -25,6 +25,28 @@
                 <button type="button" class="btn btn-primary o-map-button-center-map">
                     <t t-esc="_t('Center Map')"/>
                 </button>
+                <table class="o_group o_inner_group">
+                    <tbody>
+                        <tr>
+                            <td style="width: 25%;">
+                                <input class="o_field_number o_field_widget o_input"
+                                    style="display: inline-block;"
+                                    name="map_latitude"
+                                    t-att-placeholder="_t('Latitude')"
+                                    type="text"
+                                    id="map_latitude"/>
+                            </td>
+                            <td style="width: 25%;">
+                                <input class="o_field_number o_field_widget o_input"
+                                    style="display: inline-block;"
+                                    name="map_longitude"
+                                    t-att-placeholder="_t('Longitude')"
+                                    type="text"
+                                    id="map_longitude"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </t>

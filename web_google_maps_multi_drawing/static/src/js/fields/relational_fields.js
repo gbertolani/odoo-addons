@@ -54,6 +54,24 @@ odoo.define('web_google_maps_multi_drawing.relational_fields', function (require
                 this._super.apply(this, arguments);
             }
         },
+        _onMapCenter: function (event) {
+            event.stopPropagation();
+            $latField = this.$buttons.find('input#map_latitude');
+            $longField = this.$buttons.find('input#map_longitude');
+            var latitude = $latField.val().trim();
+            var longitude = $longField.val().trim();
+            if(latitude == "" || longitude == ""){
+                return this._super.apply(this, arguments);
+            }
+            latitude = eval(latitude.replaceAll(',',''));
+            longitude = eval(longitude.replaceAll(',', ''));
+            $latField.val(latitude);
+            $longField.val(longitude);
+            this.renderer.gmap.setCenter({
+                lat: latitude,
+                lng: longitude,
+            });
+        },
         // _onAddRecord: function(ev){
         //     if(ev.target.arch.tag == 'map'){
         //         this.trigger_up('new_map_shape', {
