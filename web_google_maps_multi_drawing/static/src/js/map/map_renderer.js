@@ -19,6 +19,43 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             }
         },
 
+
+        //Map Session
+        getGmapSession: function(key){
+            var parent_id = this.getParent().model
+            var storage = sessionStorage.getItem('odooGmap');
+            if(!storage){
+                return false;
+            }
+            var gmaps_vals = JSON.parse(storage);
+            var gmap_vals = gmaps_vals[parent_id];
+            if(_.isUndefined(gmap_vals)){
+                return false;
+            }
+            var value = gmap_vals[key];
+            if(_.isUndefined(value)){
+                return false;
+            }
+            return value
+        },
+
+        dumpGmapSession: function(key, value){
+            var parent_id = this.getParent().model
+            var storage = sessionStorage.getItem('odooGmap');
+            if(!storage){
+                storage = "{}";
+            }
+            var gmaps_vals = JSON.parse(storage);
+            var gmap_vals = gmaps_vals[parent_id];
+            if(_.isUndefined(gmap_vals)){
+                gmaps_vals[parent_id] = {}
+            }
+            gmaps_vals[parent_id][key] = value;
+            var new_storage = JSON.stringify(gmaps_vals)
+            sessionStorage.setItem('odooGmap', new_storage);
+            return true;
+        },
+
         // _initMap: function () {
         //     var res = this._super();
         //     this._initDrawing();
@@ -179,6 +216,21 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             }else{
                 self._centerMap();
             }
+
+            //Set mapType
+            var mapTypeId = self.getGmapSession('mapTypeId');
+            if(mapTypeId){
+                self.gmap.setMapTypeId(mapTypeId);
+            }
+
+        },
+
+        _initListeners: function(){
+            var self = this;
+            self.gmap.addListener('maptypeid_changed', function(){
+                var mapTypeId = self.gmap.getMapTypeId();
+                self.dumpGmapSession('mapTypeId', mapTypeId);
+            })
         },
 
 
@@ -186,6 +238,7 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             var res = this._super();
             this._initDrawing();
             this._initGeoLocation();
+            this._initListeners();
             return res;
         },
 
