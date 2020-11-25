@@ -13,6 +13,10 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             this.editModeColor = '#006ee5';
             this.localData = [];
             this.defaultMapPos = null;
+            var zonePos = this.getZonePos();
+            if(!_.isUndefined(zonePos)){
+                this.defaultMapPos = zonePos;
+            }
         },
 
         // _initMap: function () {
@@ -116,9 +120,14 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             if(_.isUndefined(this.zoneLat) || _.isUndefined(this.zoneLng)){
                 return;
             }
+            var zoneLat = data[this.zoneLat];
+            var zoneLng = data[this.zoneLng];
+            if(zoneLat == 0 || zoneLng == 0){
+                return;
+            }
             var pos = {
-                lat: data[this.zoneLat],
-                lng: data[this.zoneLng],
+                lat: zoneLat,
+                lng: zoneLng,
             }
             return pos;
         },
@@ -155,11 +164,14 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
-                            const pos = {
-                                lat: position.coords.latitude,
-                                lng: position.coords.longitude,
-                            };
-                            self.defaultMapPos = pos;
+                            var pos = self.defaultMapPos;
+                            if(pos == null){
+                                pos = {
+                                    lat: position.coords.latitude,
+                                    lng: position.coords.longitude,
+                                };
+                                self.defaultMapPos = pos;
+                            }
                             self.gmap.setCenter(pos);
                         },
                     );
