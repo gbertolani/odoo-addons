@@ -12,11 +12,6 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
             this._super.apply(this, arguments);
             this.editModeColor = '#006ee5';
             this.localData = [];
-            this.defaultMapPos = null;
-            var zonePos = this.getZonePos();
-            if(!_.isUndefined(zonePos)){
-                this.defaultMapPos = zonePos;
-            }
         },
 
 
@@ -170,8 +165,8 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
         },
 
         _getDefaultMapPos: function(){
-            var pos = this.defaultMapPos;
-            if(pos == null){
+            var pos = this.getZonePos();
+            if(_.isUndefined(pos)){
                 pos = {
                     lat: -34.6083,
                     lng: -58.3712,
@@ -186,12 +181,37 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
         },
 
         mapShapesCentered: function () {
-            if(this.state.data.length){
+            var mapBounds = new google.maps.LatLngBounds();
+            var regsQty = this.state.data.length;
+
+            //Update with default position
+            if(!regsQty){
+                var defaultPos = this._getDefaultMapPos();
+                if(defaultPos){
+                    var latLng = new google.maps.LatLng(
+                        defaultPos.lat, defaultPos.lng);
+                    mapBounds.extend(latLng);
+                    this.gmap.fitBounds(mapBounds);
+                    return;
+                }
+            }
+
+            //If not markers, call super
+            if(!this.markers.length){
                 return this._super.apply(this, arguments);
             }
-            var mapBounds = new google.maps.LatLngBounds();
+
+            //Center all points:
+            if (!this.shapesBounds.isEmpty()) {
+                mapBounds.union(this.shapesBounds);
+            }
+            _.each(this.shapesLatLng, function (latLng) {
+                mapBounds.extend(latLng);
+            });
+            _.each(this.markers, function (marker) {
+                mapBounds.extend(marker.getPosition());
+            });
             this.gmap.fitBounds(mapBounds);
-            this._centerMap()
         },
 
         _initGeoLocation: function(){
@@ -201,15 +221,15 @@ odoo.define('web_google_maps_multi_drawing.MultiMapRenderer', function (require)
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
-                            var pos = self.defaultMapPos;
-                            if(pos == null){
+                            var pos = self.getZonePos();
+                            if(_.isUndefined(pos)){
                                 pos = {
                                     lat: position.coords.latitude,
                                     lng: position.coords.longitude,
                                 };
-                                self.defaultMapPos = pos;
                             }
                             self.gmap.setCenter(pos);
+                            self.gmap.setZoom(8);
                         },
                     );
                 }

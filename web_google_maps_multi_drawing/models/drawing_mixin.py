@@ -23,8 +23,8 @@ class GoogleMapsDrawingShapeMixin(models.AbstractModel):
         required=True
     )
     shape_paths = fields.Text(string='Paths')
-    marker_latitude = fields.Float(string="Marker Latitude", digits=(16, 5))
-    marker_longitude = fields.Float(string="Marker Longitude", digits=(16, 5))
+    marker_latitude = fields.Float(string="Marker Latitude", digits=(16, 7))
+    marker_longitude = fields.Float(string="Marker Longitude", digits=(16, 7))
     zone_marker = fields.Boolean(string="Zone Marker")
 
     @api.multi
